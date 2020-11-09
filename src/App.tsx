@@ -1,7 +1,7 @@
-import { createBrowserHistory } from 'history';
-import React, { FC } from 'react';
-import { Router } from 'react-router-dom';
-import Root from './routes/Root';
+import { createBrowserHistory } from "history";
+import React, { FC } from "react";
+import { Router } from "react-router-dom";
+import Root from "./routes/Root";
 
 const App: FC = () => {
   return (
@@ -9,6 +9,6 @@ const App: FC = () => {
       <Root />
     </Router>
   );
-}
+};
 
 export default App;
