@@ -2,6 +2,13 @@
   "name": "chatterbox",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:9000",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -21,6 +28,8 @@
     "eslint-plugin-react": "^7.21.5",
     "final-form": "^4.20.1",
     "history": "^5.0.0",
+    "mobx": "^6.0.4",
+    "mobx-react": "^7.0.5",
     "prettier": "^2.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -30,12 +39,6 @@
     "react-scripts": "4.0.0",
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

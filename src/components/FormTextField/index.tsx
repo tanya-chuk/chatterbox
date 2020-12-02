@@ -8,8 +8,7 @@ type IProps = {
 
 const FormTextField: FC<IProps> = ({ name, ...props }: IProps) => {
   const { input, meta } = useField(name);
-  const error = meta.error || meta.submitError;
-  return <TextField error={Boolean(error)} {...input} {...props} />;
+  return <TextField error={meta.error} {...input} {...props} />;
 };
 
 export default FormTextField;
