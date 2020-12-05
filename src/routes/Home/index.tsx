@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import React, { FC, ReactNode, useEffect } from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import FormTextField from "../../components/FormTextField";
-import { IStore, withStore } from "../../stores";
+import { IStore, useStore } from "../../stores";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,45 +27,46 @@ type IRenderForm = (props: FormRenderProps<IFormValues>) => ReactNode;
 
 type IProps = IStore;
 
-const Home: FC<IProps> = observer(
-  ({ UserStore: { username, postUsername, resetUsername } }) => {
-    const classes = useStyles();
-    const initialValues = { username };
+const Home: FC<IProps> = observer(() => {
+  const classes = useStyles();
+  const {
+    UserStore: { username, postUsername, resetUsername }
+  } = useStore();
+  const initialValues = { username };
 
-    useEffect(() => {
-      return () => resetUsername();
-    }, []);
+  useEffect(() => {
+    return () => resetUsername();
+  }, []);
 
-    const handleFormSubmit = (values: IFormValues) => postUsername(values);
+  const handleFormSubmit = (values: IFormValues) => postUsername(values);
 
-    const renderForm: IRenderForm = ({ dirty, handleSubmit }) => (
-      <form onSubmit={handleSubmit} className={classes.form}>
-        <FormTextField
-          required
-          name="username"
-          label="Set your username"
-          placeholder="username"
+  const renderForm: IRenderForm = ({ dirty, handleSubmit }) => (
+    <form onSubmit={handleSubmit} className={classes.form}>
+      <FormTextField
+        required
+        name="username"
+        label="Set your username"
+        placeholder="username"
+      />
+      <Button disabled={!dirty} type="submit">
+        Enter the chat
+      </Button>
+    </form>
+  );
+  // todo разобраться с обновлением имени
+  return (
+    <div className={classes.root}>
+      {username ? (
+        <Typography>Welcome, {username}!</Typography>
+      ) : (
+        <Form
+          initialValues={initialValues}
+          render={renderForm}
+          onSubmit={handleFormSubmit}
         />
-        <Button disabled={!dirty} type="submit">
-          Enter the chat
-        </Button>
-      </form>
-    );
-    // todo разобраться с обновлением имени
-    return (
-      <div className={classes.root}>
-        {username ? (
-          <Typography>Welcome, {username}!</Typography>
-        ) : (
-          <Form
-            initialValues={initialValues}
-            render={renderForm}
-            onSubmit={handleFormSubmit}
-          />
-        )}
-      </div>
-    );
-  }
-);
+      )}
+    </div>
+  );
+});
 
-export default withStore(Home);
+export default Home;

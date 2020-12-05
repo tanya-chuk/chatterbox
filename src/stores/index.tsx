@@ -9,11 +9,17 @@ const StoreContext = createContext<IStore>({
   UserStore
 });
 
+/**
+ * Хук для использования стора
+ */
+export const useStore = (): IStore => useContext(StoreContext);
+
+/**
+ * HOC для использования стора
+ */
 export const withStore = (Component: FC<IStore>) => (
   props: unknown
 ): JSX.Element => {
-  const connectedComponent = (
-    <Component {...props} {...useContext(StoreContext)} />
-  );
+  const connectedComponent = <Component {...props} {...useStore()} />;
   return connectedComponent;
 };
