@@ -1,15 +1,23 @@
-import { action, observable } from "mobx";
+import { action, makeAutoObservable, observable } from "mobx";
 import UserService, { IParams } from "../services/UserService";
 
 class UserStore {
-  @observable username = "";
+  name = "";
 
-  @action postUsername = async (values: IParams) => {
+  constructor() {
+    makeAutoObservable(this, {
+      name: observable,
+      postUser: action,
+      resetUser: action
+    });
+  }
+
+  postUser = async (values: IParams) => {
     const { data } = await UserService.postUsername(values);
-    this.username = data.username;
+    this.name = data.name;
   };
-  @action resetUsername = () => {
-    this.username = "";
+  resetUser = () => {
+    this.name = "";
   };
 }
 

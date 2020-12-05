@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import { observer } from "mobx-react";
-import React, { FC, ReactNode, useEffect } from "react";
+import React, { FC, ReactNode } from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import FormTextField from "../../components/FormTextField";
 import { IStore, useStore } from "../../stores";
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface IFormValues {
-  username: string;
+  name: string;
 }
 
 type IRenderForm = (props: FormRenderProps<IFormValues>) => ReactNode;
@@ -30,34 +30,30 @@ type IProps = IStore;
 const Home: FC<IProps> = observer(() => {
   const classes = useStyles();
   const {
-    UserStore: { username, postUsername, resetUsername }
+    UserStore: { name, postUser }
   } = useStore();
-  const initialValues = { username };
+  const initialValues = { name };
 
-  useEffect(() => {
-    return () => resetUsername();
-  }, []);
-
-  const handleFormSubmit = (values: IFormValues) => postUsername(values);
+  const handleFormSubmit = (values: IFormValues) => postUser(values);
 
   const renderForm: IRenderForm = ({ dirty, handleSubmit }) => (
     <form onSubmit={handleSubmit} className={classes.form}>
       <FormTextField
         required
-        name="username"
+        name="name"
         label="Set your username"
-        placeholder="username"
+        placeholder="name"
       />
       <Button disabled={!dirty} type="submit">
         Enter the chat
       </Button>
     </form>
   );
-  // todo разобраться с обновлением имени
+
   return (
     <div className={classes.root}>
-      {username ? (
-        <Typography>Welcome, {username}!</Typography>
+      {name ? (
+        <Typography>Welcome, {name}!</Typography>
       ) : (
         <Form
           initialValues={initialValues}

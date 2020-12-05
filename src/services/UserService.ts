@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 const url = "/user";
 
 export interface IParams {
-  username: string;
+  name: string;
 }
 
 const UserService = {
