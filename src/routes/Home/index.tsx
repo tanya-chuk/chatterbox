@@ -1,41 +1,48 @@
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
+import { observer } from "mobx-react";
 import React, { FC, ReactNode } from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import FormTextField from "../../components/FormTextField";
+import { IStore, useStore } from "../../stores";
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: "flex",
     height: "100vh",
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "column"
+  },
+  form: {
+    display: "flex",
     flexDirection: "column"
   }
 }));
 
 interface IFormValues {
-  username: string;
+  name: string;
 }
 
 type IRenderForm = (props: FormRenderProps<IFormValues>) => ReactNode;
 
-const Home: FC = () => {
-  const classes = useStyles();
-  const initialValues = {
-    username: ""
-  };
+type IProps = IStore;
 
-  const handleFormSubmit = (values: IFormValues) => {
-    return values;
-  };
+const Home: FC<IProps> = observer(() => {
+  const classes = useStyles();
+  const {
+    UserStore: { name, postUser }
+  } = useStore();
+  const initialValues = { name };
+
+  const handleFormSubmit = (values: IFormValues) => postUser(values);
 
   const renderForm: IRenderForm = ({ dirty, handleSubmit }) => (
-    <form onSubmit={handleSubmit} className={classes.root}>
+    <form onSubmit={handleSubmit} className={classes.form}>
       <FormTextField
         required
-        name="username"
+        name="name"
         label="Set your username"
-        placeholder="username"
+        placeholder="name"
       />
       <Button disabled={!dirty} type="submit">
         Enter the chat
@@ -44,12 +51,18 @@ const Home: FC = () => {
   );
 
   return (
-    <Form
-      initialValues={initialValues}
-      render={renderForm}
-      onSubmit={handleFormSubmit}
-    />
+    <div className={classes.root}>
+      {name ? (
+        <Typography>Welcome, {name}!</Typography>
+      ) : (
+        <Form
+          initialValues={initialValues}
+          render={renderForm}
+          onSubmit={handleFormSubmit}
+        />
+      )}
+    </div>
   );
-};
+});
 
 export default Home;
