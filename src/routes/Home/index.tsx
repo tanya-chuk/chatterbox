@@ -1,14 +1,20 @@
-import { Button, makeStyles } from "@material-ui/core";
-import React, { FC, ReactNode } from "react";
+import { Button, makeStyles, Typography } from "@material-ui/core";
+import { observer } from "mobx-react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import FormTextField from "../../components/FormTextField";
+import UserStore from "../../stores/UserStore";
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: "flex",
     height: "100vh",
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "column"
+  },
+  form: {
+    display: "flex",
     flexDirection: "column"
   }
 }));
@@ -19,28 +25,19 @@ interface IFormValues {
 
 type IRenderForm = (props: FormRenderProps<IFormValues>) => ReactNode;
 
-const Home: FC = () => {
+const Home: FC = observer(() => {
   const classes = useStyles();
-  const initialValues = {
-    username: ""
-  };
+  const { username, postUsername, resetUsername } = UserStore;
+  const initialValues = { username };
 
-  const handleFormSubmit = (values: IFormValues) => {
-    fetch("/testAPI", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
-      body: JSON.stringify(values)
-    }).then((res) => res.text());
-    return values;
-  };
+  useEffect(() => {
+    return () => resetUsername();
+  }, []);
+
+  const handleFormSubmit = (values: IFormValues) => postUsername(values);
 
   const renderForm: IRenderForm = ({ dirty, handleSubmit }) => (
-    <form onSubmit={handleSubmit} className={classes.root}>
+    <form onSubmit={handleSubmit} className={classes.form}>
       <FormTextField
         required
         name="username"
@@ -52,14 +49,20 @@ const Home: FC = () => {
       </Button>
     </form>
   );
-
+// todo разобраться с обновлением имени и контекстом
   return (
-    <Form
-      initialValues={initialValues}
-      render={renderForm}
-      onSubmit={handleFormSubmit}
-    />
+    <div className={classes.root}>
+      {username ? (
+        <Typography>Welcome, {username}!</Typography>
+      ) : (
+        <Form
+          initialValues={initialValues}
+          render={renderForm}
+          onSubmit={handleFormSubmit}
+        />
+      )}
+    </div>
   );
-};
+});
 
 export default Home;
