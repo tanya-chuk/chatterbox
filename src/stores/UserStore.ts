@@ -12,6 +12,9 @@ class UserStore {
     });
   }
 
+  login = async () => {
+    await UserService.login();
+  };
   postUser = async (values: IParams) => {
     const { data } = await UserService.postUsername(values);
     this.name = data.name;

@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import { observer } from "mobx-react";
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import FormTextField from "../../components/FormTextField";
 import { IStore, useStore } from "../../stores";
@@ -30,7 +30,7 @@ type IProps = IStore;
 const Home: FC<IProps> = observer(() => {
   const classes = useStyles();
   const {
-    UserStore: { name, postUser }
+    UserStore: { name, postUser, login }
   } = useStore();
   const initialValues = { name };
 
