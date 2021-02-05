@@ -10,14 +10,18 @@ interface ITab {
 interface IProps {
   tabs: { [key: string]: ITab };
   initialTab?: ITab["value"];
+  onChange?: (val: string | number) => void;
 }
 
-const Tabs: FC<IProps> = ({ tabs, initialTab }: IProps) => {
+const Tabs: FC<IProps> = ({ tabs, initialTab, onChange }: IProps) => {
   const initialValue = initialTab || Object.values(tabs)[0].value;
   const [activeTab, setActiveTab] = useState(initialValue);
   const currentTab = tabs[activeTab];
 
   const handleChange = (e: ChangeEvent<unknown>, tab: string) => {
+    if (onChange) {
+      onChange(tab);
+    }
     setActiveTab(tab);
   };
 
