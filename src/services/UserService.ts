@@ -7,9 +7,10 @@ export interface IParams {
 }
 
 const UserService = {
-  login: (): Promise<AxiosResponse> => axios.get(url),
-  postUsername: (params: IParams): Promise<AxiosResponse> =>
-    axios.post(url, params)
+  login: (params: IParams): Promise<AxiosResponse> =>
+    axios.post(`${url}/login`, params),
+  signUp: (params: IParams): Promise<AxiosResponse> =>
+    axios.post(`${url}/signup`, params)
 };
 
 export default UserService;

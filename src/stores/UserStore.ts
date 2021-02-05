@@ -7,16 +7,17 @@ class UserStore {
   constructor() {
     makeAutoObservable(this, {
       name: observable,
-      postUser: action,
+      signUp: action,
       resetUser: action
     });
   }
 
-  login = async () => {
-    await UserService.login();
+  login = async (values: IParams) => {
+    const { data } = await UserService.login(values);
+    this.name = data.name;
   };
-  postUser = async (values: IParams) => {
-    const { data } = await UserService.postUsername(values);
+  signUp = async (values: IParams) => {
+    const { data } = await UserService.signUp(values);
     this.name = data.name;
   };
   resetUser = () => {
