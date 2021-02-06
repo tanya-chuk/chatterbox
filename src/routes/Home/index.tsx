@@ -1,10 +1,12 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import React, { FC, ReactNode, useState } from "react";
 import { Form, FormRenderProps } from "react-final-form";
-import FormTextField from "../../components/FormTextField";
+import { useHistory } from "react-router";
 import Tabs from "../../components/Tabs";
 import { IStore, useStore } from "../../stores";
+import { routesUrls } from "../Root/routesUrls";
+import { tabsConfig } from "./tabsConfig";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,62 +33,24 @@ type IProps = IStore;
 
 const Home: FC<IProps> = observer(() => {
   const classes = useStyles();
+  const history = useHistory();
   const {
     UserStore: { name, signUp, login }
   } = useStore();
   const initialValues = { name, password: "" };
-
-  const tabsConfig = {
-    signIn: {
-      label: "Sign in",
-      value: "signIn",
-      component: (
-        <>
-          <FormTextField
-            required
-            name="name"
-            label="Enter your username"
-            placeholder="name"
-          />
-          <FormTextField
-            required
-            type="password"
-            name="password"
-            label="Enter your password"
-            placeholder="password"
-          />
-        </>
-      )
-    },
-    signUp: {
-      label: "Sign up",
-      value: "signUp",
-      component: (
-        <>
-          <FormTextField
-            required
-            name="name"
-            label="Set a username"
-            placeholder="name"
-          />
-          <FormTextField
-            required
-            type="password"
-            name="password"
-            label="Set a password"
-            placeholder="password"
-          />
-        </>
-      )
-    }
-  };
-
   const [currentTab, setCurrentTab] = useState<string | number>(
     tabsConfig.signIn.value
   );
 
-  const handleFormSubmit = (values: IFormValues) =>
-    currentTab === "signUp" ? signUp(values) : login(values);
+  const handleFormSubmit = async (values: IFormValues) => {
+    const response = await (currentTab === "signUp"
+      ? signUp(values)
+      : login(values));
+
+    if (response) {
+      history.push(routesUrls.MESSAGES);
+    }
+  };
 
   const handleTabChange = (newTab: string | number) => {
     setCurrentTab(newTab);
@@ -103,15 +67,11 @@ const Home: FC<IProps> = observer(() => {
 
   return (
     <div className={classes.root}>
-      {name ? (
-        <Typography>Welcome, {name}!</Typography>
-      ) : (
-        <Form
-          initialValues={initialValues}
-          render={renderForm}
-          onSubmit={handleFormSubmit}
-        />
-      )}
+      <Form
+        initialValues={initialValues}
+        render={renderForm}
+        onSubmit={handleFormSubmit}
+      />
     </div>
   );
 });
