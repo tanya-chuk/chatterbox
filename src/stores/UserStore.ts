@@ -1,12 +1,15 @@
-import { action, makeAutoObservable, observable } from "mobx";
+import { action, makeAutoObservable, observable, runInAction } from "mobx";
 import UserService, { IParams } from "../services/UserService";
+import { IPeer } from "./types";
 
 class UserStore {
   name = "";
+  peers: IPeer[] = [];
 
   constructor() {
     makeAutoObservable(this, {
       name: observable,
+      peers: observable,
       signUp: action,
       resetUser: action
     });
@@ -14,11 +17,18 @@ class UserStore {
 
   login = async (values: IParams) => {
     const { data } = await UserService.login(values);
-    this.name = data.name;
+    runInAction(() => {
+      this.name = data.name;
+      this.peers = data.peers;
+    });
+    return data;
   };
   signUp = async (values: IParams) => {
     const { data } = await UserService.signUp(values);
-    this.name = data.name;
+    runInAction(() => {
+      this.name = data.name;
+    });
+    return data;
   };
   resetUser = () => {
     this.name = "";
